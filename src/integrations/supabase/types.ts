@@ -14,7 +14,105 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      farmer_profiles: {
+        Row: {
+          created_at: string
+          district: string
+          farm_size_acres: number | null
+          full_name: string
+          harvest_date: string | null
+          id: string
+          onion_variety: string
+          phone: string
+          state: string
+          storage_type: string
+          updated_at: string
+          user_id: string
+          village: string
+        }
+        Insert: {
+          created_at?: string
+          district?: string
+          farm_size_acres?: number | null
+          full_name?: string
+          harvest_date?: string | null
+          id?: string
+          onion_variety?: string
+          phone?: string
+          state?: string
+          storage_type?: string
+          updated_at?: string
+          user_id: string
+          village?: string
+        }
+        Update: {
+          created_at?: string
+          district?: string
+          farm_size_acres?: number | null
+          full_name?: string
+          harvest_date?: string | null
+          id?: string
+          onion_variety?: string
+          phone?: string
+          state?: string
+          storage_type?: string
+          updated_at?: string
+          user_id?: string
+          village?: string
+        }
+        Relationships: []
+      }
+      onion_reports: {
+        Row: {
+          avg_diameter_mm: number
+          confidence: number
+          created_at: string
+          defects: Json
+          farmer_snapshot: Json
+          grade_a_percent: number
+          id: string
+          lot_id: string
+          recommendation: string
+          reject_percent: number
+          summary: string
+          total_onions: number
+          urs_percent: number
+          user_id: string
+        }
+        Insert: {
+          avg_diameter_mm?: number
+          confidence?: number
+          created_at?: string
+          defects?: Json
+          farmer_snapshot?: Json
+          grade_a_percent?: number
+          id?: string
+          lot_id: string
+          recommendation?: string
+          reject_percent?: number
+          summary?: string
+          total_onions?: number
+          urs_percent?: number
+          user_id: string
+        }
+        Update: {
+          avg_diameter_mm?: number
+          confidence?: number
+          created_at?: string
+          defects?: Json
+          farmer_snapshot?: Json
+          grade_a_percent?: number
+          id?: string
+          lot_id?: string
+          recommendation?: string
+          reject_percent?: number
+          summary?: string
+          total_onions?: number
+          urs_percent?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
