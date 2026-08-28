@@ -21,7 +21,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { analyzeOnionImage, type OnionReport } from "@/lib/onion.functions";
+import { analyzeOnionImage } from "@/lib/onion.functions";
+import type { OnionReport } from "@/lib/report-shape";
 import heroImage from "@/assets/onion-hero.jpg";
 
 export const Route = createFileRoute("/")({
