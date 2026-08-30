@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/verify-email")({
   validateSearch: (search: Record<string, unknown>) => ({
-    email: typeof search.email === "string" ? search.email : "",
+    email: typeof search["email"] === "string" ? (search["email"] as string) : "",
   }),
   head: () => ({
     meta: [
