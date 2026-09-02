@@ -118,7 +118,7 @@ function ScanScreen() {
           </h1>
           <p className="text-xs text-primary-foreground/85 sm:text-sm">
             {name
-              ? `Namaste ${name} — upload an image of your lot for instant quality analysis.`
+               ? `${name} — upload an image of your lot for instant quality analysis.`
               : "Upload an image of onions and get instant quality analysis with a detailed report."}
           </p>
           <Button
