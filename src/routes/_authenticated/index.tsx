@@ -2,10 +2,23 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRef, useState } from "react";
-import { Camera, Loader2, ScanLine, Upload, RotateCcw, Printer, Download } from "lucide-react";
+import {
+  Camera,
+  Loader2,
+  ScanLine,
+  Upload,
+  RotateCcw,
+  Printer,
+  Download,
+  Award,
+  Ruler,
+  AlertTriangle,
+  XCircle,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/app-shell";
+import { StatDonut } from "@/components/stat-donut";
 import { ReportView } from "@/components/report-view";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -85,34 +98,77 @@ function ScanScreen() {
   }
 
   const name = profile.data?.fullName?.trim();
+  const damagedPercent =
+    report?.defects
+      .filter((d) => /damag|split|bruis|crack|mould|mold|rot/i.test(d.category))
+      .reduce((sum, d) => sum + Number(d.percentage || 0), 0) ?? 0;
 
   return (
     <AppShell>
-      <header className="relative overflow-hidden rounded-b-[2rem]">
+      <section className="relative overflow-hidden rounded-3xl">
         <img
           src={heroImage}
           alt="Freshly harvested red onions spread on a jute sack"
-          className="h-44 w-full object-cover"
+          className="h-52 w-full object-cover sm:h-56"
         />
         <div className="bg-gradient-ink absolute inset-0" />
-        <div className="absolute inset-x-0 bottom-0 p-5">
-          <p className="text-xs font-semibold tracking-wide text-primary uppercase">
-            Bias-free digital grading
-          </p>
-          <h1 className="mt-1 truncate font-display text-2xl font-bold text-foreground">
-            {name ? `Namaste, ${name}` : "OnionGrade AI"}
+        <div className="absolute inset-y-0 left-0 flex max-w-lg flex-col justify-center gap-2 p-5 sm:p-8">
+          <h1 className="font-display text-xl leading-tight font-extrabold text-primary-foreground sm:text-3xl">
+            AI-Powered Onion Quality Assessment
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Photograph a lot for Grade A, URS and reject percentages.
+          <p className="text-xs text-primary-foreground/85 sm:text-sm">
+            {name
+              ? `Namaste ${name} — upload an image of your lot for instant quality analysis.`
+              : "Upload an image of onions and get instant quality analysis with a detailed report."}
           </p>
+          <Button
+            variant="secondary"
+            className="mt-1 h-11 w-fit rounded-xl px-5 font-semibold"
+            onClick={() => inputRef.current?.click()}
+            disabled={mutation.isPending}
+          >
+            <Upload className="size-4" /> Start New Analysis
+          </Button>
         </div>
-      </header>
+      </section>
 
-      <section className="px-5 pt-5">
-        <div className="surface rounded-3xl p-5">
+      <section className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatDonut
+          label="Grade A"
+          percent={report?.gradeAPercent ?? 0}
+          caption="Good quality"
+          tone="grade-a"
+          icon={<Award className="size-5" />}
+        />
+        <StatDonut
+          label="URS (Undersized)"
+          percent={report?.ursPercent ?? 0}
+          caption="Undersized onions"
+          tone="urs"
+          icon={<Ruler className="size-5" />}
+        />
+        <StatDonut
+          label="Damaged"
+          percent={damagedPercent}
+          caption="Damaged onions"
+          tone="reject"
+          icon={<AlertTriangle className="size-5" />}
+        />
+        <StatDonut
+          label="Rejected"
+          percent={report?.rejectPercent ?? 0}
+          caption="Rotten / sprouted"
+          tone="rejected"
+          icon={<XCircle className="size-5" />}
+        />
+      </section>
+
+      <section className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+        <div className="surface h-fit rounded-3xl p-5">
+          <h2 className="font-display text-lg font-extrabold text-foreground">Upload &amp; Analyze</h2>
           <Label
             htmlFor="lot"
-            className="text-xs font-semibold tracking-wide text-muted-foreground uppercase"
+            className="mt-4 block text-xs font-semibold tracking-wide text-muted-foreground uppercase"
           >
             Lot / bag reference (optional)
           </Label>
@@ -121,7 +177,7 @@ function ScanScreen() {
             value={lotId}
             onChange={(e) => setLotId(e.target.value)}
             placeholder="e.g. Nashik-B12"
-            className="mt-2 h-12 rounded-2xl"
+            className="mt-2 h-11 rounded-xl"
           />
 
           {preview ? (
@@ -129,9 +185,9 @@ function ScanScreen() {
               <img src={preview} alt="Onion lot submitted for grading" className="w-full" />
             </div>
           ) : (
-            <div className="mt-4 flex flex-col items-center gap-2 rounded-2xl border border-dashed border-border bg-muted/50 px-4 py-9 text-center">
+            <div className="mt-4 flex flex-col items-center gap-2 rounded-2xl border border-dashed border-border bg-muted/60 px-4 py-9 text-center">
               <ScanLine className="size-7 text-primary" />
-              <p className="text-sm font-medium text-foreground">Spread onions in one layer</p>
+              <p className="text-sm font-semibold text-foreground">Spread onions in one layer</p>
               <p className="text-xs text-muted-foreground">
                 Even daylight, plain background, whole lot in frame
               </p>
@@ -140,7 +196,7 @@ function ScanScreen() {
 
           <div className="mt-4 grid grid-cols-2 gap-3">
             <Button
-              className="btn-lime h-12 rounded-2xl font-semibold"
+              className="btn-violet h-11 rounded-xl font-semibold"
               onClick={() => navigate({ to: "/camera" })}
               disabled={mutation.isPending}
             >
@@ -148,7 +204,7 @@ function ScanScreen() {
             </Button>
             <Button
               variant="secondary"
-              className="h-12 rounded-2xl font-semibold"
+              className="h-11 rounded-xl font-semibold"
               onClick={() => inputRef.current?.click()}
               disabled={mutation.isPending}
             >
@@ -165,37 +221,65 @@ function ScanScreen() {
           />
 
           {mutation.isPending ? (
-            <p className="mt-4 flex items-center justify-center gap-2 text-sm font-medium text-primary">
-              <Loader2 className="size-4 animate-spin" /> Inspecting bulbs for rot, sprouts,
-              damage…
+            <p className="mt-4 flex items-center justify-center gap-2 text-sm font-semibold text-primary">
+              <Loader2 className="size-4 animate-spin" /> Inspecting bulbs for rot, sprouts, damage…
             </p>
           ) : null}
         </div>
-      </section>
 
-      {report ? (
-        <section className="mt-5 space-y-4 px-5">
-          <ReportView report={report} />
-          <div className="grid grid-cols-3 gap-3">
-            <Button variant="secondary" className="h-11 rounded-xl" onClick={() => window.print()}>
-              <Printer className="size-4" /> Print
-            </Button>
-            <Button variant="secondary" className="h-11 rounded-xl" onClick={downloadReport}>
-              <Download className="size-4" /> Save
-            </Button>
-            <Button
-              className="btn-lime h-11 rounded-xl"
-              onClick={() => {
-                setPreview(null);
-                setReport(null);
-                mutation.reset();
-              }}
+        <div className="space-y-4">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+            <h2 className="min-w-0 truncate font-display text-lg font-extrabold text-foreground">
+              Analysis Results
+            </h2>
+            <span
+              className={`shrink-0 rounded-full px-3 py-1 text-xs font-bold ${
+                report
+                  ? "bg-grade-a-soft text-grade-a"
+                  : "bg-muted text-muted-foreground"
+              }`}
             >
-              <RotateCcw className="size-4" /> New
-            </Button>
+              {report ? "Completed" : mutation.isPending ? "Analysing" : "Awaiting image"}
+            </span>
           </div>
-        </section>
-      ) : null}
+
+          {report ? (
+            <>
+              <ReportView report={report} />
+              <div className="grid grid-cols-3 gap-3">
+                <Button
+                  variant="secondary"
+                  className="h-11 rounded-xl"
+                  onClick={() => window.print()}
+                >
+                  <Printer className="size-4" /> Print
+                </Button>
+                <Button variant="secondary" className="h-11 rounded-xl" onClick={downloadReport}>
+                  <Download className="size-4" /> Save
+                </Button>
+                <Button
+                  className="btn-violet h-11 rounded-xl"
+                  onClick={() => {
+                    setPreview(null);
+                    setReport(null);
+                    mutation.reset();
+                  }}
+                >
+                  <RotateCcw className="size-4" /> New
+                </Button>
+              </div>
+            </>
+          ) : (
+            <div className="surface rounded-3xl p-8 text-center">
+              <p className="text-sm font-semibold text-foreground">No analysis yet</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Upload or capture a photo of the lot to see Grade A, URS and reject percentages with
+                a full defect breakdown.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
     </AppShell>
   );
 }
