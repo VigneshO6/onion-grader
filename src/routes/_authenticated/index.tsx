@@ -98,6 +98,10 @@ function ScanScreen() {
   }
 
   const name = profile.data?.fullName?.trim();
+  const damagedPercent =
+    report?.defects
+      .filter((d) => /damag|split|bruis|crack|mould|mold|rot/i.test(d.category))
+      .reduce((sum, d) => sum + Number(d.percentage || 0), 0) ?? 0;
 
   return (
     <AppShell>
