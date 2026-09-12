@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Camera, Loader2, ShieldCheck, Upload, CircleDot } from "lucide-react";
+import { Bell, Camera, Loader2, ShieldCheck, Upload, CircleDot } from "lucide-react";
 import { toast } from "sonner";
 
 import { AppShell, ScreenHeader } from "@/components/app-shell";
@@ -19,6 +19,8 @@ export const Route = createFileRoute("/_authenticated/camera")({
         content:
           "Allow camera access and capture your onion lot live to grade it instantly with OnionGrade AI.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { property: "og:title", content: "Live camera scan — OnionGrade AI" },
       {
         property: "og:description",
@@ -38,6 +40,15 @@ function CameraScreen() {
   const streamRef = useRef<MediaStream | null>(null);
   const uploadRef = useRef<HTMLInputElement>(null);
   const [stage, setStage] = useState<Stage>("explainer");
+
+  async function requestNotifications() {
+    if (!("Notification" in window) || Notification.permission !== "default") return;
+    const permission = await Notification.requestPermission();
+    if (permission === "granted") {
+      toast.success("Notifications enabled for scan results");
+      new Notification("OnionGrade notifications enabled", { body: "We’ll alert you when your quality report is ready." });
+    }
+  }
 
   const stop = useCallback(() => {
     streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -63,6 +74,7 @@ function CameraScreen() {
       });
       streamRef.current = stream;
       setStage("live");
+      await requestNotifications();
       requestAnimationFrame(() => {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
@@ -109,6 +121,7 @@ function CameraScreen() {
               OnionGrade AI needs your camera to photograph the onion lot. The frame is analysed for
               grading only — nothing is recorded or streamed.
             </p>
+            <div className="mt-4 flex items-center gap-2 rounded-2xl bg-secondary p-3 text-left text-xs text-secondary-foreground"><Bell className="size-4 shrink-0 text-primary" /> After camera access, you can enable report notifications.</div>
             <Button onClick={requestCamera} className="btn-lime mt-5 h-12 w-full rounded-2xl font-semibold">
               <ShieldCheck className="size-4" /> Allow camera
             </Button>

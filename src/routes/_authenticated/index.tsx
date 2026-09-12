@@ -8,8 +8,7 @@ import {
   ScanLine,
   Upload,
   RotateCcw,
-  Printer,
-  Download,
+  FileDown,
   Award,
   Ruler,
   AlertTriangle,
@@ -27,7 +26,8 @@ import { analyzeOnionImage } from "@/lib/onion.functions";
 import { getFarmerProfile } from "@/lib/farmer.functions";
 import { fileToCompressedDataUrl } from "@/lib/image";
 import type { OnionReport } from "@/lib/report-shape";
-import heroImage from "@/assets/onion-hero.jpg";
+import { shareOrDownloadReportPdf } from "@/lib/report-pdf";
+import heroImage from "@/assets/oniongrade-field-hero.jpg";
 
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
@@ -44,6 +44,8 @@ export const Route = createFileRoute("/_authenticated/")({
         content:
           "AI image analysis that spots rotten, sprouted, damaged and undersized onions and grades any lot without human bias.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: ScanScreen,
@@ -86,15 +88,10 @@ function ScanScreen() {
     }
   }
 
-  function downloadReport() {
+  async function downloadReport() {
     if (!report) return;
-    const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${report.lotId}-quality-report.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    const result = await shareOrDownloadReportPdf(report);
+    toast.success(result === "shared" ? "Report shared" : "PDF downloaded");
   }
 
   const name = profile.data?.fullName?.trim();
@@ -105,21 +102,26 @@ function ScanScreen() {
 
   return (
     <AppShell>
-      <section className="relative overflow-hidden rounded-3xl">
+      <section className="relative overflow-hidden rounded-3xl shadow-card">
         <img
           src={heroImage}
-          alt="Freshly harvested red onions spread on a jute sack"
-          className="h-52 w-full object-cover sm:h-56"
+          alt="Freshly harvested red onions beside an onion field"
+          width={1536}
+          height={1024}
+          className="h-72 w-full object-cover sm:h-80"
         />
         <div className="bg-gradient-ink absolute inset-0" />
         <div className="absolute inset-y-0 left-0 flex max-w-lg flex-col justify-center gap-2 p-5 sm:p-8">
-          <h1 className="font-display text-xl leading-tight font-extrabold text-primary-foreground sm:text-3xl">
-            AI-Powered Onion Quality Assessment
+          <div className="mb-1 flex flex-wrap gap-1.5">
+            {['AI Powered', 'Deep Learning', 'High Accuracy', 'Fast Processing'].map((item) => <span key={item} className="rounded-full bg-card/15 px-2.5 py-1 text-[9px] font-bold text-primary-foreground backdrop-blur">{item}</span>)}
+          </div>
+          <h1 className="font-display text-2xl leading-tight font-extrabold text-primary-foreground sm:text-4xl">
+            Smarter Grading for Better Harvests
           </h1>
           <p className="text-xs text-primary-foreground/85 sm:text-sm">
             {name
-               ? `${name} — upload an image of your lot for instant quality analysis.`
-              : "Upload an image of onions and get instant quality analysis with a detailed report."}
+                ? `${name} — deep learning based onion quality detection and grading.`
+              : "Deep learning based onion quality detection and grading."}
           </p>
           <Button
             variant="secondary"
@@ -127,12 +129,12 @@ function ScanScreen() {
             onClick={() => inputRef.current?.click()}
             disabled={mutation.isPending}
           >
-            <Upload className="size-4" /> Start New Analysis
+            <Camera className="size-4" /> Scan &amp; Analyze
           </Button>
         </div>
       </section>
 
-      <section className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="mt-5 grid grid-cols-2 gap-3 xl:grid-cols-4">
         <StatDonut
           label="Grade A"
           percent={report?.gradeAPercent ?? 0}
@@ -246,26 +248,20 @@ function ScanScreen() {
           {report ? (
             <>
               <ReportView report={report} />
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3">
+                <Button className="btn-violet h-12 rounded-xl font-bold" onClick={downloadReport}>
+                  <FileDown className="size-4" /> Download Grading Report (PDF)
+                </Button>
                 <Button
                   variant="secondary"
-                  className="h-11 rounded-xl"
-                  onClick={() => window.print()}
-                >
-                  <Printer className="size-4" /> Print
-                </Button>
-                <Button variant="secondary" className="h-11 rounded-xl" onClick={downloadReport}>
-                  <Download className="size-4" /> Save
-                </Button>
-                <Button
-                  className="btn-violet h-11 rounded-xl"
+                  className="h-12 rounded-xl"
                   onClick={() => {
                     setPreview(null);
                     setReport(null);
                     mutation.reset();
                   }}
                 >
-                  <RotateCcw className="size-4" /> New
+                  <RotateCcw className="size-4" /> <span className="sr-only sm:not-sr-only">New scan</span>
                 </Button>
               </div>
             </>

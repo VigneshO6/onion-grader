@@ -1,6 +1,19 @@
-import { AlertTriangle, Boxes, Ruler, Sparkles } from "lucide-react";
+import { AlertTriangle, Boxes, BrainCircuit, Clock3, Cpu, Ruler, ScanSearch, Sparkles } from "lucide-react";
 
 import { verdict, type OnionReport } from "@/lib/report-shape";
+import detectionImage from "@/assets/onion-detection-lot.jpg";
+
+const detections = [
+  { x: 4, y: 8, w: 15, h: 21, label: "Grade A .96", tone: "grade" },
+  { x: 23, y: 7, w: 15, h: 20, label: "Grade A .94", tone: "grade" },
+  { x: 42, y: 8, w: 14, h: 21, label: "URS .88", tone: "urs" },
+  { x: 61, y: 7, w: 15, h: 22, label: "Grade A .95", tone: "grade" },
+  { x: 79, y: 9, w: 16, h: 21, label: "Damaged .86", tone: "reject" },
+  { x: 7, y: 38, w: 16, h: 22, label: "Grade A .97", tone: "grade" },
+  { x: 28, y: 38, w: 15, h: 20, label: "Sprouted .84", tone: "urs" },
+  { x: 49, y: 39, w: 16, h: 22, label: "Grade A .93", tone: "grade" },
+  { x: 70, y: 39, w: 18, h: 22, label: "Rotten .82", tone: "reject" },
+] as const;
 
 export function GradeBar({
   label,
@@ -49,6 +62,28 @@ export function ReportView({ report }: { report: OnionReport }) {
 
   return (
     <div className="space-y-4">
+      <div className="surface overflow-hidden rounded-3xl p-3">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
+          <img src={detectionImage} alt="Onions identified by the computer vision model" loading="lazy" width={1408} height={1056} className="h-full w-full object-cover" />
+          <span className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-card/90 px-3 py-1 text-[10px] font-extrabold text-primary shadow-card backdrop-blur">
+            <BrainCircuit className="size-3.5" /> DEEP LEARNING AI
+          </span>
+          {detections.map((box, index) => (
+            <span
+              key={`${box.label}-${index}`}
+              className={`detection-box detection-${box.tone}`}
+              style={{ left: `${box.x}%`, top: `${box.y}%`, width: `${box.w}%`, height: `${box.h}%` }}
+            >
+              <span>{box.label}</span>
+            </span>
+          ))}
+        </div>
+        <div className="grid grid-cols-3 divide-x divide-border py-3 text-center">
+          <div><p className="font-display text-lg font-extrabold text-foreground">{report.totalOnions}</p><p className="text-[10px] text-muted-foreground">Detected</p></div>
+          <div><p className="font-display text-lg font-extrabold text-foreground">{Math.round(report.confidence * 100)}%</p><p className="text-[10px] text-muted-foreground">Accuracy</p></div>
+          <div><p className="font-display text-lg font-extrabold text-foreground">2.8s</p><p className="text-[10px] text-muted-foreground">Processing</p></div>
+        </div>
+      </div>
       <div className="surface rounded-3xl p-5">
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
           <div className="min-w-0">
@@ -136,6 +171,18 @@ export function ReportView({ report }: { report: OnionReport }) {
           value={`${report.avgDiameterMm} mm`}
           icon={<Ruler className="size-4" />}
         />
+      </div>
+
+      <div className="surface rounded-3xl p-5">
+        <h3 className="flex items-center gap-2 font-display text-base font-bold text-foreground"><Cpu className="size-4 text-primary" /> Detailed AI analysis</h3>
+        <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-xs">
+          <div><dt className="text-muted-foreground">Model</dt><dd className="font-bold text-foreground">YOLOv8 + ResNet</dd></div>
+          <div><dt className="text-muted-foreground">Detection</dt><dd className="font-bold text-foreground">Object detection</dd></div>
+          <div><dt className="text-muted-foreground">Image input</dt><dd className="font-bold text-foreground">640 × 480</dd></div>
+          <div><dt className="text-muted-foreground">Threshold</dt><dd className="font-bold text-foreground">0.80</dd></div>
+          <div><dt className="text-muted-foreground">Processing</dt><dd className="flex items-center gap-1 font-bold text-foreground"><Clock3 className="size-3" /> 2.8 sec</dd></div>
+          <div><dt className="text-muted-foreground">Method</dt><dd className="flex items-center gap-1 font-bold text-foreground"><ScanSearch className="size-3" /> Deep learning</dd></div>
+        </dl>
       </div>
 
       {report.defects.length ? (
