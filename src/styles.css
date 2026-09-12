@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * OnionAI design system — light violet dashboard.
+ * OnionGrade design system — premium lavender agritech.
  * All colors are oklch semantic tokens. Never hardcode colors in components.
  */
 
@@ -78,9 +78,9 @@
 
 :root {
   --radius: 1rem;
-  --background: oklch(0.98 0.006 300);
+  --background: oklch(0.975 0.014 300);
   --foreground: oklch(0.24 0.03 295);
-  --card: oklch(1 0 0);
+  --card: oklch(1 0 0 / 88%);
   --card-foreground: oklch(0.24 0.03 295);
   --elevated: oklch(0.99 0.004 300);
   --popover: oklch(1 0 0);
@@ -132,7 +132,8 @@
   }
 
   body {
-    background-color: var(--color-background);
+    background-image: linear-gradient(145deg, oklch(0.98 0.018 300), oklch(0.97 0.02 325));
+    background-attachment: fixed;
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -165,4 +166,50 @@
   background-color: var(--card);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-card);
+  backdrop-filter: blur(18px);
+}
+
+@utility onion-mark {
+  border-radius: 58% 42% 52% 48% / 62% 55% 45% 38%;
+  background-image: var(--background-image-gradient-violet);
+  box-shadow: var(--shadow-glow);
+  transform: rotate(-8deg);
+}
+
+.detection-box {
+  position: absolute;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: .35rem;
+}
+
+.detection-box > span {
+  position: absolute;
+  top: -1.05rem;
+  left: -2px;
+  max-width: 7rem;
+  overflow: hidden;
+  border-radius: .25rem .25rem 0 0;
+  padding: .1rem .3rem;
+  color: var(--primary-foreground);
+  font-size: .5rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.detection-grade { border-color: var(--grade-a); }
+.detection-grade > span { background-color: var(--grade-a); }
+.detection-urs { border-color: var(--urs); }
+.detection-urs > span { background-color: var(--urs); }
+.detection-reject { border-color: var(--reject); }
+.detection-reject > span { background-color: var(--reject); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .surface { animation: surface-in .45s ease both; }
+  @keyframes surface-in { from { opacity: 0; transform: translateY(8px); } }
+}
+
+@media print {
+  nav, aside, header, button { display: none !important; }
+  main { padding: 0 !important; }
 }
