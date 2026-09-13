@@ -36,7 +36,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
         const active = to === "/" ? pathname === "/" : pathname.startsWith(to);
         return (
           <Link
-            key={to}
+            key={label}
             to={to}
             onClick={onNavigate}
             className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
@@ -134,7 +134,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             const primary = index === 2;
             return (
               <Link
-                key={to}
+                key={label}
                 to={to}
                 aria-label={label}
                 className={`flex min-w-14 shrink-0 flex-col items-center gap-0.5 text-[10px] font-bold transition-colors ${

@@ -1,4 +1,4 @@
-import { AlertTriangle, Boxes, BrainCircuit, Clock3, Cpu, Ruler, ScanSearch, Sparkles } from "lucide-react";
+import { AlertTriangle, Boxes, Clock3, Cpu, Ruler, ScanSearch, Sparkles } from "lucide-react";
 
 import { verdict, type OnionReport } from "@/lib/report-shape";
 import detectionImage from "@/assets/onion-detection-provided.png.asset.json";
@@ -53,9 +53,6 @@ export function ReportView({ report }: { report: OnionReport }) {
       <div className="surface overflow-hidden rounded-3xl p-3">
         <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
           <img src={detectionImage.url} alt="Onions graded as Grade A, URS, damaged, sprouted and rotten" loading="lazy" width={606} height={460} className="h-full w-full object-cover" />
-          <span className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-card/90 px-3 py-1 text-[10px] font-extrabold text-primary shadow-card backdrop-blur">
-            <BrainCircuit className="size-3.5" /> DEEP LEARNING AI
-          </span>
         </div>
         <div className="grid grid-cols-3 divide-x divide-border py-3 text-center">
           <div><p className="font-display text-lg font-extrabold text-foreground">{report.totalOnions}</p><p className="text-[10px] text-muted-foreground">Detected</p></div>
