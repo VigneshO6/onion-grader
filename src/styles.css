@@ -176,34 +176,6 @@
   transform: rotate(-8deg);
 }
 
-.detection-box {
-  position: absolute;
-  border-width: 2px;
-  border-style: solid;
-  border-radius: .35rem;
-}
-
-.detection-box > span {
-  position: absolute;
-  top: -1.05rem;
-  left: -2px;
-  max-width: 7rem;
-  overflow: hidden;
-  border-radius: .25rem .25rem 0 0;
-  padding: .1rem .3rem;
-  color: var(--primary-foreground);
-  font-size: .5rem;
-  font-weight: 800;
-  white-space: nowrap;
-}
-
-.detection-grade { border-color: var(--grade-a); }
-.detection-grade > span { background-color: var(--grade-a); }
-.detection-urs { border-color: var(--urs); }
-.detection-urs > span { background-color: var(--urs); }
-.detection-reject { border-color: var(--reject); }
-.detection-reject > span { background-color: var(--reject); }
-
 @media (prefers-reduced-motion: no-preference) {
   .surface { animation: surface-in .45s ease both; }
   @keyframes surface-in { from { opacity: 0; transform: translateY(8px); } }
