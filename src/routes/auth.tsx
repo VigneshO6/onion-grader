@@ -25,6 +25,8 @@ export const Route = createFileRoute("/auth")({
         property: "og:description",
         content: "Farmer login for instant AI onion quality grading and digital reports.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: AuthScreen,
