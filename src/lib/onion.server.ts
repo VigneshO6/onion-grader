@@ -1,3 +1,9 @@
+import { visionJson } from "@/lib/ai-vision.server";
+import {
+  LOW_CONFIDENCE_MESSAGE,
+  LOW_CONFIDENCE_THRESHOLD,
+  type OnionType,
+} from "@/lib/onion-variety";
 import type { OnionDefect } from "@/lib/report-shape";
 
 const SYSTEM_PROMPT = `You are an agricultural produce inspector specialising in onion (Allium cepa) post-harvest grading for Indian mandi and NAFED procurement standards.
@@ -15,6 +21,11 @@ Return ONLY minified JSON, no markdown fence, with this exact shape:
 Rules: the three percentages must sum to 100 (one decimal max). defects must cover these categories when present: "Rotten / Mould", "Sprouted", "Mechanical damage", "Undersized", "Skin peeling / discolouration". confidence is 0-1. summary <= 220 characters. recommendation <= 180 characters, actionable (storage, re-sorting, pricing). If the image contains no onions, return totalOnions 0, all percentages 0, and say so in summary.`;
 
 export type AnalysisResult = {
+  onionType: OnionType;
+  /** Dominant condition, only used for small onions ("Healthy", "Rotten", …). */
+  condition: string;
+  conditionConfidence: number;
+  qualityStatus: string;
   totalOnions: number;
   gradeAPercent: number;
   ursPercent: number;
