@@ -120,8 +120,8 @@ function ScanScreen() {
           </h1>
           <p className="text-xs text-primary-foreground/85 sm:text-sm">
             {name
-                ? `${name} — deep learning based onion quality detection and grading.`
-              : "Deep learning based onion quality detection and grading."}
+                ? `${name} — onion quality detection and grading.`
+              : "Onion quality detection and grading."}
           </p>
           <Button
             variant="secondary"
