@@ -65,6 +65,8 @@ export type Database = {
       onion_reports: {
         Row: {
           avg_diameter_mm: number
+          condition: string
+          condition_confidence: number
           confidence: number
           created_at: string
           defects: Json
@@ -72,6 +74,8 @@ export type Database = {
           grade_a_percent: number
           id: string
           lot_id: string
+          onion_type: string
+          quality_status: string
           recommendation: string
           reject_percent: number
           summary: string
@@ -81,6 +85,8 @@ export type Database = {
         }
         Insert: {
           avg_diameter_mm?: number
+          condition?: string
+          condition_confidence?: number
           confidence?: number
           created_at?: string
           defects?: Json
@@ -88,6 +94,8 @@ export type Database = {
           grade_a_percent?: number
           id?: string
           lot_id: string
+          onion_type?: string
+          quality_status?: string
           recommendation?: string
           reject_percent?: number
           summary?: string
@@ -97,6 +105,8 @@ export type Database = {
         }
         Update: {
           avg_diameter_mm?: number
+          condition?: string
+          condition_confidence?: number
           confidence?: number
           created_at?: string
           defects?: Json
@@ -104,6 +114,8 @@ export type Database = {
           grade_a_percent?: number
           id?: string
           lot_id?: string
+          onion_type?: string
+          quality_status?: string
           recommendation?: string
           reject_percent?: number
           summary?: string
