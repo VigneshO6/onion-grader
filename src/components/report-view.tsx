@@ -1,7 +1,7 @@
 import { AlertTriangle, Boxes, Clock3, Cpu, Ruler, ScanSearch, Sparkles } from "lucide-react";
 
 import { verdict, type OnionReport } from "@/lib/report-shape";
-import detectionImage from "@/assets/onion-detection-provided.png.asset.json";
+
 
 export function GradeBar({
   label,
@@ -51,10 +51,8 @@ export function ReportView({ report }: { report: OnionReport }) {
   return (
     <div className="space-y-4">
       <div className="surface overflow-hidden rounded-3xl p-3">
-        <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-muted">
-          <img src={detectionImage.url} alt="Onions graded as Grade A, URS, damaged, sprouted and rotten" loading="lazy" width={606} height={460} className="h-full w-full object-cover" />
-        </div>
         <div className="grid grid-cols-3 divide-x divide-border py-3 text-center">
+
           <div><p className="font-display text-lg font-extrabold text-foreground">{report.totalOnions}</p><p className="text-[10px] text-muted-foreground">Detected</p></div>
           <div><p className="font-display text-lg font-extrabold text-foreground">{Math.round(report.confidence * 100)}%</p><p className="text-[10px] text-muted-foreground">Accuracy</p></div>
           <div><p className="font-display text-lg font-extrabold text-foreground">2.8s</p><p className="text-[10px] text-muted-foreground">Processing</p></div>
