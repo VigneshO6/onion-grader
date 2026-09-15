@@ -130,7 +130,7 @@ export async function gradeOnionPhoto(imageDataUrl: string): Promise<AnalysisRes
     ursPercent,
     rejectPercent,
     avgDiameterMm: Math.max(0, Math.round(Number(parsed["avgDiameterMm"]) || 0)),
-    confidence: Math.min(1, Math.max(0, Number(parsed["confidence"]) || 0)),
+    confidence,
     defects,
     summary: String(parsed["summary"] ?? "").slice(0, 400),
     recommendation: String(parsed["recommendation"] ?? "").slice(0, 300),

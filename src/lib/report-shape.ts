@@ -20,6 +20,10 @@ export type OnionReport = {
   id: string;
   lotId: string;
   createdAt: string;
+  onionType: "big" | "small" | "unknown";
+  condition: string;
+  conditionConfidence: number;
+  qualityStatus: string;
   totalOnions: number;
   gradeAPercent: number;
   ursPercent: number;
