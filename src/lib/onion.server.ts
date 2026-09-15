@@ -115,7 +115,16 @@ export async function gradeOnionPhoto(imageDataUrl: string): Promise<AnalysisRes
         .slice(0, 8)
     : [];
 
+  const confidence = Math.min(1, Math.max(0, Number(parsed["confidence"]) || 0));
+
   return {
+    onionType: "big",
+    condition: "",
+    conditionConfidence: confidence,
+    qualityStatus:
+      confidence < LOW_CONFIDENCE_THRESHOLD
+        ? LOW_CONFIDENCE_MESSAGE
+        : "Big onion lot graded against Grade A / URS / Reject standards.",
     totalOnions: Math.max(0, Math.round(Number(parsed["totalOnions"]) || 0)),
     gradeAPercent,
     ursPercent,
