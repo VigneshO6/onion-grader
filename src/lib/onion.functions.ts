@@ -15,8 +15,17 @@ export const analyzeOnionImage = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }): Promise<OnionReport> => {
-    const { gradeOnionPhoto } = await import("@/lib/onion.server");
-    const analysis = await gradeOnionPhoto(data.imageDataUrl);
+    const { detectOnionType } = await import("@/lib/variety-detect.server");
+    const { onionType } = await detectOnionType(data.imageDataUrl);
+
+    let analysis;
+    if (onionType === "small") {
+      const { gradeSmallOnionPhoto } = await import("@/lib/small-onion.server");
+      analysis = await gradeSmallOnionPhoto(data.imageDataUrl);
+    } else {
+      const { gradeOnionPhoto } = await import("@/lib/onion.server");
+      analysis = await gradeOnionPhoto(data.imageDataUrl);
+    }
 
     const { data: profile } = await context.supabase
       .from("farmer_profiles")
@@ -48,6 +57,10 @@ export const analyzeOnionImage = createServerFn({ method: "POST" })
         reject_percent: analysis.rejectPercent,
         avg_diameter_mm: analysis.avgDiameterMm,
         confidence: analysis.confidence,
+        onion_type: analysis.onionType,
+        condition: analysis.condition,
+        condition_confidence: analysis.conditionConfidence,
+        quality_status: analysis.qualityStatus,
         defects: analysis.defects,
         summary: analysis.summary,
         recommendation: analysis.recommendation,

@@ -43,7 +43,30 @@ export async function buildReportPdf(report: OnionReport): Promise<Blob> {
   doc.setFontSize(10);
   doc.setTextColor(110, 115, 105);
   doc.text(`AI confidence ${Math.round(report.confidence * 100)}%`, M, y);
-  y += 26;
+  y += 16;
+  const variety =
+    report.onionType === "small"
+      ? "China Vengayam (Small Onion)"
+      : report.onionType === "big"
+        ? "Big Onion"
+        : "Unrecognised onion type";
+  doc.text(
+    `Onion type: ${variety}${
+      report.condition
+        ? `  |  Condition: ${report.condition} (${Math.round(
+            (report.conditionConfidence || 0) * 100,
+          )}%)`
+        : ""
+    }`,
+    M,
+    y,
+  );
+  y += 16;
+  if (report.qualityStatus) {
+    doc.text(doc.splitTextToSize(`Quality status: ${report.qualityStatus}`, W - M * 2), M, y);
+    y += 12 * (doc.splitTextToSize(report.qualityStatus, W - M * 2) as string[]).length;
+  }
+  y += 18;
 
   // Farmer block
   const f = report.farmer;

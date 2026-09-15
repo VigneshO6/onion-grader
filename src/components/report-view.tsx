@@ -1,5 +1,6 @@
 import { AlertTriangle, Boxes, Clock3, Cpu, Ruler, ScanSearch, Sparkles } from "lucide-react";
 
+import { onionTypeLabel } from "@/lib/onion-variety";
 import { verdict, type OnionReport } from "@/lib/report-shape";
 
 
@@ -58,6 +59,35 @@ export function ReportView({ report }: { report: OnionReport }) {
           <div><p className="font-display text-lg font-extrabold text-foreground">2.8s</p><p className="text-[10px] text-muted-foreground">Processing</p></div>
         </div>
       </div>
+
+      <div className="surface rounded-3xl p-5">
+        <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+          Prediction
+        </p>
+        <h3 className="mt-1 font-display text-lg font-bold text-foreground">
+          {onionTypeLabel(report.onionType)}
+        </h3>
+        <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-xs">
+          <div className="min-w-0">
+            <dt className="text-muted-foreground">Condition</dt>
+            <dd className="font-bold text-foreground">{report.condition || "Not classified"}</dd>
+          </div>
+          <div className="min-w-0">
+            <dt className="text-muted-foreground">Confidence</dt>
+            <dd className="font-bold text-foreground">
+              {Math.round((report.conditionConfidence || 0) * 100)}%
+            </dd>
+          </div>
+          <div className="min-w-0">
+            <dt className="text-muted-foreground">Grade</dt>
+            <dd className="font-bold text-foreground">{verdict(report.gradeAPercent)}</dd>
+          </div>
+        </dl>
+        {report.qualityStatus ? (
+          <p className="mt-3 text-sm text-muted-foreground">{report.qualityStatus}</p>
+        ) : null}
+      </div>
+
       <div className="surface rounded-3xl p-5">
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
           <div className="min-w-0">

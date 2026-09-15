@@ -20,6 +20,10 @@ export type OnionReport = {
   id: string;
   lotId: string;
   createdAt: string;
+  onionType: "big" | "small" | "unknown";
+  condition: string;
+  conditionConfidence: number;
+  qualityStatus: string;
   totalOnions: number;
   gradeAPercent: number;
   ursPercent: number;
@@ -46,13 +50,22 @@ type ReportRow = {
   summary: string;
   recommendation: string;
   farmer_snapshot: unknown;
+  onion_type?: string | null;
+  condition?: string | null;
+  condition_confidence?: number | string | null;
+  quality_status?: string | null;
 };
 
 export function rowToReport(row: ReportRow): OnionReport {
+  const rawType = row.onion_type ?? "big";
   return {
     id: row.id,
     lotId: row.lot_id,
     createdAt: row.created_at,
+    onionType: rawType === "small" ? "small" : rawType === "unknown" ? "unknown" : "big",
+    condition: row.condition ?? "",
+    conditionConfidence: Number(row.condition_confidence ?? row.confidence),
+    qualityStatus: row.quality_status ?? "",
     totalOnions: row.total_onions,
     gradeAPercent: Number(row.grade_a_percent),
     ursPercent: Number(row.urs_percent),
