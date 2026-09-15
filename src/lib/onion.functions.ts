@@ -15,8 +15,17 @@ export const analyzeOnionImage = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }): Promise<OnionReport> => {
-    const { gradeOnionPhoto } = await import("@/lib/onion.server");
-    const analysis = await gradeOnionPhoto(data.imageDataUrl);
+    const { detectOnionType } = await import("@/lib/variety-detect.server");
+    const { onionType } = await detectOnionType(data.imageDataUrl);
+
+    let analysis;
+    if (onionType === "small") {
+      const { gradeSmallOnionPhoto } = await import("@/lib/small-onion.server");
+      analysis = await gradeSmallOnionPhoto(data.imageDataUrl);
+    } else {
+      const { gradeOnionPhoto } = await import("@/lib/onion.server");
+      analysis = await gradeOnionPhoto(data.imageDataUrl);
+    }
 
     const { data: profile } = await context.supabase
       .from("farmer_profiles")
