@@ -65,7 +65,7 @@ export function ReportView({ report }: { report: OnionReport }) {
           Prediction
         </p>
         <h3 className="mt-1 font-display text-lg font-bold text-foreground">
-          {onionTypeLabel(report.onionType)}
+          {"\n"}
         </h3>
         <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-xs">
           <div className="min-w-0">
