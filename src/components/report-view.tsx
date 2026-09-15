@@ -1,5 +1,6 @@
 import { AlertTriangle, Boxes, Clock3, Cpu, Ruler, ScanSearch, Sparkles } from "lucide-react";
 
+import { onionTypeLabel } from "@/lib/onion-variety";
 import { verdict, type OnionReport } from "@/lib/report-shape";
 
 
